@@ -5,8 +5,5 @@
  +doom-dashboard-banner-file "emacs-logo.png"
 )
 
-;; enable the menu bar
-(menu-bar-mode 1)
-
-;; disable scroll bar
-(toggle-scroll-bar -1)
+(menu-bar-mode 1)      ;; enable the menu bar
+(toggle-scroll-bar -1) ;; disable scroll bar
