@@ -52,13 +52,34 @@
 ;; Java
 (defun cfg-java-mode-hook ()
   "Hook for java mode"
-  ;; compile & run (SPC c c)
   (set (make-local-variable 'build-command) "gradle build" )
   (set (make-local-variable 'run-command)   "gradle run" )
   (set (make-local-variable 'test-command)  "gradle test" )
   (set (make-local-variable 'debug-command) "" )
 )
 (add-hook 'java-mode-hook 'cfg-java-mode-hook)
+
+;; Javascript :(
+(defun cfg-javascript-mode-hook ()
+  "Hook for Javascript mode"
+  (set (make-local-variable 'build-command) "" )
+  (set (make-local-variable 'run-command)   "node {bpath}" )
+  (set (make-local-variable 'test-command)  "" )
+  (set (make-local-variable 'debug-command) "" )
+)
+(add-hook 'javascript-mode-hook 'cfg-javascript-mode-hook)
+
+;; Python (3)
+(defun cfg-python-mode-hook ()
+  "Hook for python mode"
+  (set (make-local-variable 'show-trailing-whitespace) nil)
+
+  (set (make-local-variable 'build-command) "" )
+  (set (make-local-variable 'run-command)   "python {bpath}" )
+  (set (make-local-variable 'test-command)  "" )
+  (set (make-local-variable 'debug-command) "" )
+)
+(add-hook 'python-mode-hook 'cfg-python-mode-hook)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;                          Keyboard Shortcuts                               ;;
@@ -82,9 +103,18 @@
                 :desc "Neotree sidebar" "s" #'neotree
 ))
 
+;; journal
+(map! :leader (:prefix-map ("j" . "journal")
+                :desc "New journal entry"                         "n" #'org-journal-new-entry
+                :desc "Open journal at date"                      "o" #'org-journal-read-entry
+                :desc "Search for string in journals of interval" "s" #'org-journal-search
+                :desc "Go one day forward"                        "f" #'org-journal-next-entry
+                :desc "Go to previous day"                        "p" #'org-journal-previous-entry
+))
+
 ;; window
 (map! (:map evil-window-map
-                :desc "Other window" "SPC" #'other-window
+                :desc "Other window"                             "SPC" #'other-window
                 :desc "Open file in new vertically split window"   "a" #'open-file-in-new-window
                 :desc "Open file in new horizontally split window" "A" #'open-file-in-new-h-window
                 :desc "Resize window to frame width fraction"      "f" #'resize-window-to-width-fraction
@@ -121,10 +151,9 @@
 )
 
 (defun run-command-in-project-root (command)
-  "Runs a command from the projects root"
-  (interactive)
+  "Runs a command from the projects root, replacing '{bpath}' with the buffer file path"
   (projectile-with-default-dir (projectile-ensure-project (projectile-project-root))
-    (shell-command command))
+    (shell-command (s-replace "{bpath}" (buffer-file-name) command)))
 )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -136,6 +165,30 @@
 (setq company-idle-delay .3)                         ; decrease delay before autocompletion popup shows
 (setq company-echo-delay 0)                          ; remove annoying blinking
 (setq company-begin-commands '(self-insert-command)) ; start autocompletion only after typing
+
+;; Journal
+(setq org-journal-dir "~/docs/journal")
+
+;; PlantUML
+(org-babel-do-load-languages 'org-babel-load-languages '((plantuml . t)))
+(setq org-plantuml-jar-path (expand-file-name "/opt/plantuml/plantuml.jar"))
+
+;; Source Code with colors
+(add-to-list 'org-latex-packages-alist '("" "minted"))
+(setq org-latex-listings 'minted)
+(setq org-latex-pdf-process
+      '("pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
+        "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
+        "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"))
+(setq org-src-fontify-natively t)
+(org-babel-do-load-languages
+ 'org-babel-load-languages
+ '((R . t)
+   (latex . t)))
+
+
+;; Reveal.js (org-reveal)
+(setq org-reveal-mathjax-url "/usr/share/mathjax/MathJax.js?config=TeX-AMS-MML_HTMLorMML")
 
 (provide 'config)
 ;;; config.el ends here
