@@ -81,6 +81,37 @@
 )
 (add-hook 'python-mode-hook 'cfg-python-mode-hook)
 
+;; Ruby
+(defun cfg-ruby-mode-hook ()
+  "Hook for ruby mode"
+  (set (make-local-variable 'build-command) "" )
+  (set (make-local-variable 'run-command)   "ruby {bpath}" )
+  (set (make-local-variable 'test-command)  "" )
+  (set (make-local-variable 'debug-command) "" )
+)
+(add-hook 'ruby-mode-hook 'cfg-ruby-mode-hook)
+
+
+;; Julia
+(defun cfg-julia-mode-hook ()
+  "Hook for julia mode"
+  (set (make-local-variable 'build-command) "" )
+  (set (make-local-variable 'run-command)   "julia {bpath}" )
+  (set (make-local-variable 'test-command)  "" )
+  (set (make-local-variable 'debug-command) "" )
+)
+(add-hook 'julia-mode-hook 'cfg-julia-mode-hook)
+
+;; Idris
+(defun cfg-idris-mode-hook ()
+  "Hook for julia mode"
+  (set (make-local-variable 'build-command) "idris {bpath} -o {bpath-noext}" )
+  (set (make-local-variable 'run-command)   "idris {bpath} -o {bpath-noext} && {bpath-noext}" )
+  (set (make-local-variable 'test-command)  "idris {bpath} --check" )
+  (set (make-local-variable 'debug-command) "" )
+)
+(add-hook 'idris-mode-hook 'cfg-idris-mode-hook)
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;                          Keyboard Shortcuts                               ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -110,6 +141,14 @@
                 :desc "Search for string in journals of interval" "s" #'org-journal-search
                 :desc "Go one day forward"                        "f" #'org-journal-next-entry
                 :desc "Go to previous day"                        "p" #'org-journal-previous-entry
+))
+
+;; agenda
+(map! :leader (:prefix-map ("a" . "agenda")
+                :desc "Open 'school' agenda"       "s" (lambda () (interactive) (open-agenda-file 0))
+                :desc "Open 'projects' agenda"     "p" (lambda () (interactive) (open-agenda-file 1))
+                :desc "Open 'appointments' agenda" "a" (lambda () (interactive) (open-agenda-file 2))
+                :desc "Open 'other' agenda"        "o" (lambda () (interactive) (open-agenda-file 3))
 ))
 
 ;; window
@@ -153,7 +192,13 @@
 (defun run-command-in-project-root (command)
   "Runs a command from the projects root, replacing '{bpath}' with the buffer file path"
   (projectile-with-default-dir (projectile-ensure-project (projectile-project-root))
-    (shell-command (s-replace "{bpath}" (buffer-file-name) command)))
+    (shell-command (s-replace "{bpath-noext}" (file-name-sans-extension buffer-file-name)
+                   (s-replace "{bpath}" (buffer-file-name) command))))
+)
+
+(defun open-agenda-file (index)
+  "Opens an org agenda file from the org-agenda-files list"
+  (evil-window-vsplit nil (nth index org-agenda-files))
 )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -189,6 +234,16 @@
 
 ;; Reveal.js (org-reveal)
 (setq org-reveal-mathjax-url "/usr/share/mathjax/MathJax.js?config=TeX-AMS-MML_HTMLorMML")
+
+;; Agenda
+(setq org-agenda-files (list "~/docs/agenda/school.org"
+                             "~/docs/agenda/projects.org"
+                             "~/docs/agenda/appointments.org"
+                             "~/docs/agenda/other.org"))
+
+;; Org-Todo
+(setq org-todo-keywords
+      '((sequence "TODO" "INPROGRESS" "TEST" "FEEDBACK" "|" "DONE" "NOPE")))
 
 (provide 'config)
 ;;; config.el ends here

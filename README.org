@@ -1,0 +1,18 @@
+#+TITLE:   My Doom Emacs Configuration
+#+DATE:    August 24, 2019
+#+SINCE:   {replace with next tagged release version}
+#+STARTUP: inlineimages
+
+* Table of Contents :TOC_3:noexport:
+- [[#description][Description]]
+- [[#prerequisites][Prerequisites]]
+
+* Description
+A Doom Emacs configuration an Emacs noob.
+
+* Prerequisites
+- go
+- gocode
+- texlive-most
+- MathJax
+- PlantUML
