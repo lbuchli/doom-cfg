@@ -112,6 +112,59 @@
 )
 (add-hook 'idris-mode-hook 'cfg-idris-mode-hook)
 
+;; OCaml
+(defun cfg-ocaml-mode-hook ()
+  "Hook for ocaml mode"
+  (set (make-local-variable 'build-command) "dune build" )
+  (set (make-local-variable 'run-command)   (format "dune exec ./%s.exe" (get-dune-exec-name)))
+  (set (make-local-variable 'test-command)  "" )
+  (set (make-local-variable 'debug-command) "" )
+)
+(add-hook 'tuareg-mode-hook 'cfg-ocaml-mode-hook)
+
+;; Haskell TODO
+(defun cfg-haskell-mode-hook ()
+  "Hook for haskell mode"
+  (set (make-local-variable 'build-command) "" )
+  (set (make-local-variable 'run-command)   "" )
+  (set (make-local-variable 'test-command)  "" )
+  (set (make-local-variable 'debug-command) "" )
+)
+(add-hook 'haskell-mode-hook 'cfg-haskell-mode-hook)
+
+;; Perl
+(defun cfg-perl-mode-hook ()
+  "Hook for perl mode"
+  (set (make-local-variable 'build-command) "" )
+  (set (make-local-variable 'run-command)   "perl {bpath}" )
+  (set (make-local-variable 'test-command)  "" )
+  (set (make-local-variable 'debug-command) "" )
+)
+(add-hook 'perl-mode-hook 'cfg-perl-mode-hook)
+
+;; VHDL
+(defun cfg-vhdl-mode-hook ()
+  "Hook for vhdl mode"
+  (vhdl-stutter-mode t)
+  (vhdl-electric-mode t)
+  (set (make-local-variable 'build-command) "" ) ;; TODO
+  (set (make-local-variable 'run-command)   "" ) ;; TODO
+  (set (make-local-variable 'test-command)  "" ) ;; TODO
+  (set (make-local-variable 'debug-command) "" ) ;; TODO
+)
+(add-hook 'vhdl-mode-hook 'cfg-vhdl-mode-hook)
+
+;; Rust
+(defun cfg-rust-mode-hook ()
+  "Hook for rust mode"
+  (lsp-ui-mode)
+  (set (make-local-variable 'build-command) "cargo build" )
+  (set (make-local-variable 'run-command)   "cargo run" )
+  (set (make-local-variable 'test-command)  "cargo test" )
+  (set (make-local-variable 'debug-command) "" )
+)
+(add-hook 'rust-mode-hook 'cfg-rust-mode-hook)
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;                          Keyboard Shortcuts                               ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -201,6 +254,16 @@
   (evil-window-vsplit nil (nth index org-agenda-files))
 )
 
+(defun get-dune-exec-name ()
+  "Attempts to read ./dune and extract executables information"
+  (interactive)
+  (let ((file (f-read-text "dune"))
+        (regex "(name.*?\\([_A-Za-z0-9]+\\))"))
+    (string-match regex file)
+    (match-string 1 file)
+  )
+)
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;                             Other Behaviour                                 ;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -234,6 +297,7 @@
 
 ;; Reveal.js (org-reveal)
 (setq org-reveal-mathjax-url "/usr/share/mathjax/MathJax.js?config=TeX-AMS-MML_HTMLorMML")
+(setq org-reveal-root "file:///home/lukas/usr/src/reveal.js")
 
 ;; Agenda
 (setq org-agenda-files (list "~/docs/agenda/school.org"

@@ -6,11 +6,18 @@
 ;; (package! another-package :recipe (:fetcher github :repo "username/repo"))
 ;; (package! builtin-package :disable t)
 
+;;; Code:
 (package! verilog-mode       :recipe (:fetcher github :repo "veripool/verilog-mode"))
 (package! company-go         :recipe (:fetcher github :repo "emacsmirror/company-go"))
 (package! bison-mode         :recipe (:fetcher github :repo "Wilfred/bison-mode"))
 (package! gorepl-mode        :recipe (:fetcher github :repo "manute/gorepl-mode"))
 
+(package! telan-mode :recipe (:fetcher github :repo "lbuchli/telan-mode"))
+
 (package! yasnippet-snippets)
 (package! org-journal)
 (package! plantuml-mode)
+(package! org-re-reveal)
+
+(provide 'packages)
+;;; packages.el ends here
