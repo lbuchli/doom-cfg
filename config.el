@@ -204,6 +204,33 @@
                 :desc "Open 'other' agenda"        "o" (lambda () (interactive) (open-agenda-file 3))
 ))
 
+;; Org-Roam (SPC r)
+;; (require 'org-roam)
+;; (map! :leader (:prefix-map ("r" . "roam (notes)")
+;;                 :desc "Start"      "l" org-roam
+;;                 :desc "Today"      "t" org-roam-today
+;;                 :desc "Find File"  "f" org-roam-find-file
+;;                 :desc "Insert"     "i" org-roam-insert
+;;                 :desc "Show Graph" "g" org-roam-show-graph
+;; ))
+
+;; Zetteldeft (SPC z)
+(require 'zetteldeft)
+(map! :leader (:prefix-map ("z" "Zettels")
+                :desc "New Zettel" "n" 'zetteldeft-new-file
+                :desc "Link Zettel" "l" 'zetteldeft-find-file-full-title-insert
+                :desc "Branch Zettel" "b" 'zetteldeft-new-file-and-link
+                :desc "Search At Cursor" "c" 'zetteldeft-search-at-point
+                :desc "Search Link" "s" 'zetteldeft-avy-link-search
+                :desc "Search Tag" "t" 'zetteldeft-avy-tag-search
+                :desc "Open Link" "o" 'zetteldeft-follow-link
+                :desc "Find Zettel" "f" 'zetteldeft-find-file
+                :desc "Search text" "S" 'zetteldeft--search-global
+                :desc "Build graph from note" "g" 'zetteldeft-org-graph-note
+                :desc "Link Tagged Zettels" "L" 'zetteldeft-insert-list-links
+                :desc "Open File In Other Window" "O" 'deft-open-file-other-window
+))
+
 ;; window
 (map! (:map evil-window-map
                 :desc "Other window"                             "SPC" #'other-window
@@ -211,7 +238,6 @@
                 :desc "Open file in new horizontally split window" "A" #'open-file-in-new-h-window
                 :desc "Resize window to frame width fraction"      "f" #'resize-window-to-width-fraction
                 :desc "Resize window to frame height fraction"     "F" #'resize-window-to-height-fraction
-
 ))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -297,7 +323,7 @@
 
 ;; Reveal.js (org-reveal)
 (setq org-reveal-mathjax-url "/usr/share/mathjax/MathJax.js?config=TeX-AMS-MML_HTMLorMML")
-(setq org-reveal-root "file:///home/lukas/usr/src/reveal.js")
+(setq org-reveal-root "file:///home/lukas/.local/src/reveal.js")
 
 ;; Agenda
 (setq org-agenda-files (list "~/docs/agenda/school.org"
@@ -308,6 +334,18 @@
 ;; Org-Todo
 (setq org-todo-keywords
       '((sequence "TODO" "INPROGRESS" "TEST" "FEEDBACK" "|" "DONE" "NOPE")))
+
+;; Org-Roam
+;; (setq org-roam-directory "/home/lukas/docs/roam")
+;; (add-hook after-init-hook :after org org-roam--build-cache-async)
+
+;; Zetteldeft
+(setq deft-directory "/home/lukas/docs/zettels")
+(setq deft-strip-summary-regexp
+ (concat "\\("
+         "[\n\t]" ;; blank
+         "\\|^#\\+[a-zA-Z_]+:.*$" ;;org-mode metadata
+         "\\)"))
 
 (provide 'config)
 ;;; config.el ends here
