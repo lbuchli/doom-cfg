@@ -122,12 +122,12 @@
 )
 (add-hook 'tuareg-mode-hook 'cfg-ocaml-mode-hook)
 
-;; Haskell TODO
+;; Haskell
 (defun cfg-haskell-mode-hook ()
   "Hook for haskell mode"
-  (set (make-local-variable 'build-command) "" )
-  (set (make-local-variable 'run-command)   "" )
-  (set (make-local-variable 'test-command)  "" )
+  (set (make-local-variable 'build-command) "stack build" )
+  (set (make-local-variable 'run-command)   "stack run" )
+  (set (make-local-variable 'test-command)  "stack test" )
   (set (make-local-variable 'debug-command) "" )
 )
 (add-hook 'haskell-mode-hook 'cfg-haskell-mode-hook)
@@ -319,7 +319,6 @@
  'org-babel-load-languages
  '((R . t)
    (latex . t)))
-
 
 ;; Reveal.js (org-reveal)
 (setq org-reveal-mathjax-url "/usr/share/mathjax/MathJax.js?config=TeX-AMS-MML_HTMLorMML")

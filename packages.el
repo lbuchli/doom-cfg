@@ -20,6 +20,8 @@
 (package! plantuml-mode)
 (package! org-re-reveal)
 (package! zetteldeft)
+(package! sml-mode)
+(package! gnuplot)
 
 (provide 'packages)
 ;;; packages.el ends here
